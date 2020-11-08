@@ -29,7 +29,7 @@
 
 from setuptools import setup, find_packages
 
-package_name = "pydantic_env"
+package_name = "pydantic-env"
 package_version = open("VERSION").read().strip()
 
 
