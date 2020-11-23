@@ -57,7 +57,7 @@ class EnvSecretStr(EnvExpand, SecretStr):
         return SecretStr.validate(EnvExpand.validate(v))
 
 
-class EnvSecretUrl(EnvSecretStr):
+class EnvUrl(EnvExpand):
     """
     The EnvSecretUrl is used to define configuraiton options that store as
     Secret and validate as AnyHttpUrl
@@ -65,12 +65,11 @@ class EnvSecretUrl(EnvSecretStr):
 
     @classmethod
     def __get_validators__(cls):
-        yield EnvSecretStr.validate
+        yield EnvExpand.validate
         yield cls.validate
 
     @classmethod
-    def validate(cls, v):
-        url = v.get_secret_value()
+    def validate(cls, url):
 
         # the only way I've realized to validate an AnyHttpUrl field is to
         # define a model class and then attempt to instantiate an instance.
@@ -85,7 +84,19 @@ class EnvSecretUrl(EnvSecretStr):
             errmsg = exc.errors()[0]["msg"]
             raise ValueError(f"{errmsg}: {url}")
 
-        return v
+        return url
+
+
+class EnvSecretUrl(EnvUrl, EnvSecretStr):
+    """
+    The EnvSecretUrl is used to define configuraiton options that store as
+    Secret and validate as AnyHttpUrl
+    """
+
+    @classmethod
+    def __get_validators__(cls):
+        yield from EnvUrl.__get_validators__()
+        yield EnvSecretStr.validate
 
 
 class Credential(NoExtraBaseModel):
