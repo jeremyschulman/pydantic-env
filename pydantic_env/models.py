@@ -15,7 +15,7 @@ from pydantic import (
     ConfigDict,
     BaseModel,
     SecretStr,
-    # FilePath,
+    FilePath,
     AnyHttpUrl,
     ValidationError,
     RootModel,
@@ -133,22 +133,20 @@ class EnvSecretUrl(EnvSecretStr):
     model_validator(mode="after")(staticmethod(validate_url))
 
 
-#
-# class Credential(NoExtraBaseModel):
-#     username: EnvExpand
-#     password: EnvSecretStr
-#
-#
-# class FilePathEnvExpand(FilePath):
-#     """ A FilePath field whose value can interpolated from env vars """
-#
-#     @classmethod
-#     # Check https://docs.pydantic.dev/latest/migration/#defining-custom-types for more information.
-#     def __get_pydantic_core_schema__(cls, source: Any, handler: GetCoreSchemaHandler):
-#         yield from EnvExpand.__get_pydantic_core_schema__(source, handler)
-#         yield from FilePath.__get_pydantic_core_schema__(source, handler)
-#
-#
+class EnvCredential(NoExtraBaseModel):
+    username: EnvExpand
+    password: EnvSecretStr
+
+
+class EnvFilePath(EnvExpand):
+    """A FilePath field whose value can interpolate from env vars"""
+
+    @model_validator(mode="after")
+    @staticmethod
+    def validate_path(value):
+        return FilePath(str(value))
+
+
 # class ImportPath(BaseModel):
 #     @classmethod
 #     def validate(cls, v):
