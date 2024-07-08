@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "pydantic-env"
+version = "0.3.0"
+description = "Pydantic models for environment variables"
+
+authors = [
+    "Jeremy Schulman"
+]
+
+[tool.poetry.dependencies]
+   python = "^3.10"
+   first = "^2.0.2"
+   pydantic = ">2"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.5.0"
+interrogate = "^1.7.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.interrogate]
+    fail-under = 0
+    verbose = 1
+    color = true
+    ignore-module = true
+    exclude = ["examples", "build"]
+
+[tool.ruff]
+    # Set the maximum line length to 132.
+    # line-length = 132
+    lint.ignore = ["E731"]
+
+[tool.ruff.lint.extend-per-file-ignores]
+    "__init__.py" = ["F401", "E402"]

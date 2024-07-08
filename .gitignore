@@ -108,3 +108,4 @@ failures.csv
 .idea/
 pip-wheel-metadata/
 .local/
+poetry.lock
